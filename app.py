@@ -1,5 +1,3 @@
-from flask import Flask, render_template, url_for
-from flask_sqlalchemy import SQLAlchemy
 from blog_app import create_app
 
 app = create_app()

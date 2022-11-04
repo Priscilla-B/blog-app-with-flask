@@ -1,0 +1,39 @@
+{% extends 'partials/base.html' %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<h1 align="center">Create a Post</h1>
+
+<form action="" method="post">
+    <input type="text" name="title" class="form-control" placeholder="Title">
+    <br>
+    <textarea 
+        name="body" id="text"  
+        class="form-control" cols="30" rows="10" 
+        placeholder="Type your post here">
+    </textarea>
+    <br>
+
+    <div class="select-group">
+        <select name="" id="" class="form-control">
+            <option value="" disabled selected hidden>Select category</option>
+            <option value="movies">Movies</option>
+            <option value="music">Music</option>
+            <option value="food">Food</option>
+            <option value="philosophy">Philosophy</option>
+
+        </select>
+        
+        <button type="submit">Add</button>
+
+    </div>
+    
+    <br>
+    <div align="center">
+        <button type="submit" class="btn btn-lg btn-primary">Post</button>
+    </div>  
+</form>
+
+
+{% endblock %}

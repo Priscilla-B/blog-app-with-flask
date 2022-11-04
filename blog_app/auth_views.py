@@ -3,35 +3,24 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .models import User, db
-from .forms import SignupForm
+from .forms import SignupForm, CreatePostForm
 
 auth_views = Blueprint("auth_views", __name__)
 
 @auth_views.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+
+    form = SignupForm(request.form)
     if request.method == 'POST':
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
         
-        email_exists = User.query.filter_by(email=email).first()
-        username_exists = User.query.filter_by(username=username).first()
-        if email_exists:
-            flash('Email already exists.', category='error')
-        elif username_exists:
-            flash('Username is taken !', category='error')
-        elif password1 != password2:
-            flash("Passwords don't match")
-        else:
-            hashed_password = generate_password_hash(password1, 'sha256')
+        if form.validate():
+           
+            hashed_password = generate_password_hash(form.password.data, 'sha256')
             new_user = User(
-                first_name=first_name, 
-                last_name=last_name, 
-                email=email, 
-                username=username, 
+                first_name=form.first_name.data, 
+                last_name=form.last_name.data, 
+                email=form.email.data, 
+                username=form.username.data, 
                 password=hashed_password)
                  
             db.session.add(new_user)
@@ -40,7 +29,7 @@ def sign_up():
             flash('Your account has been created successfully !')
             return redirect(url_for('views.home'))
     
-    return render_template('sign_up.html')
+    return render_template('sign_up.html', form=form)
 
 
 @auth_views.route('/login', methods=['GET', 'POST'])

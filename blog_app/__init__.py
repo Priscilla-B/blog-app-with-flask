@@ -6,23 +6,26 @@ from flask_login import LoginManager
 
 from .views import views
 from .auth_views import auth_views
+from .models import User, db
 
-db = SQLAlchemy()
-DB_NAME = 'blog.db'
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'somerandomletters'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
     db.init_app(app)
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth_views, url_prefix='/')
 
-    create_database(app)
+    with app.app_context():
+        db.create_all()
+
+    login_manager = LoginManager(app)
+    login_manager.login_view = 'auth_views.login'
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
     return app
-
-def create_database(app):
-    if not path.exists('blog_app/'+DB_NAME):
-        db.create_all(app=app)

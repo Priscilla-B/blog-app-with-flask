@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, flash
 
 views = Blueprint("views", __name__)
 
@@ -14,3 +14,14 @@ def about():
 @views.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@views.route('/create_post', methods=['GET', 'POST'])
+def create_post():
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        body = request.form.get('body')
+        category = request.form.get('category')
+
+
+    return render_template('create_post.html')

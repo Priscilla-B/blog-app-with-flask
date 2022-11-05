@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .models import User, db
-from .forms import SignupForm, CreatePostForm
+from .forms import SignupForm
 
 auth_views = Blueprint("auth_views", __name__)
 

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from .models import User
-from wtforms import StringField, PasswordField, EmailField, ValidationError
+from .models import User, Tag
+from wtforms import StringField, TextAreaField, PasswordField, EmailField, SelectMultipleField, ValidationError
 from wtforms.validators import Length, InputRequired, EqualTo, Email
 
 class SignupForm(FlaskForm):
@@ -30,3 +30,14 @@ class SignupForm(FlaskForm):
         username_exists = User.query.filter_by(username=username.data).first()
         if username_exists:
             raise ValidationError('Username is taken !')
+
+
+class CreatePostForm(FlaskForm):
+    title = StringField(label='Title')
+    body = TextAreaField(label='Body')
+    tags = SelectMultipleField(label='Tags')
+
+    def __init__(self, *args, **kwargs):
+        super(CreatePostForm, self).__init__(*args, **kwargs)
+        self.tags.choices = [obj.name for obj in Tag.query.all()]
+    

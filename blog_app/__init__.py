@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 from .views import views
 from .auth_views import auth_views
-from .models import User, db
+from .models import User, db, migrate
 
 
 def create_app():
@@ -14,6 +14,7 @@ def create_app():
     app.config['SECRET_KEY'] = 'somerandomletters'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
     db.init_app(app)
+    migrate.init_app(app, db)
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth_views, url_prefix='/')

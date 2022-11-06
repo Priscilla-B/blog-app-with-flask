@@ -34,6 +34,7 @@ class SignupForm(FlaskForm):
 
 class CreatePostForm(FlaskForm):
     title = StringField(label='Title')
+    summary = TextAreaField(label='Summary')
     body = TextAreaField(label='Body')
     tags = SelectMultipleField(label='Tags')
 

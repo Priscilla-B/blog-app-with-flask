@@ -1,10 +1,18 @@
+import os
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user, login_required
+from flask_mail import Mail, Message
 
-from .forms import CreatePostForm
+from .forms import CreatePostForm, ContactForm
 from .models import Post, Tag, User, db
 
+mail = Mail()
+
 views = Blueprint("views", __name__)
+
+from dotenv import load_dotenv
+load_dotenv('.env') 
+
 
 @views.route('/')
 @views.route('/home')
@@ -17,9 +25,34 @@ def home():
 def about():
     return render_template('about.html')
 
-@views.route('/contact')
+@views.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('contact.html')
+
+    form = ContactForm(request.form)
+    if request.method == 'POST': 
+
+        if form.validate():
+            name = form.name.data
+            email = form.email.data
+            subject = form.subject.data
+            message = form.message.data
+
+        else:
+            flash('Form could not submit. Kindly check your inputs again')
+
+        msg = Message(
+            subject=subject, body=message, sender=email, recipients= [os.environ['MAIL_USERNAME']]
+            )
+        
+        try:
+            mail.send(msg)
+            flash('Your message has been sent! We will be in touch soon.', category='success')
+            return redirect(url_for('views.home'))
+        except:
+            flash('Your message could not be sent. Kindly try again', category='error') 
+
+
+    return render_template('contact.html', form=form)
 
 @views.route('/create_post', methods=['GET', 'POST'])
 @login_required
@@ -138,4 +171,4 @@ def posts(username):
         return redirect(url_for('views.home'))
 
     posts = Post.query.filter_by(author=user).all()
-    return render_template("posts.html", user=current_user, posts=posts, username=username)
+    return render_template("posts.html", posts=posts, username=username)

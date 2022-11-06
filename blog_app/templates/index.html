@@ -3,18 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+{% include 'partials/create_post_button.html' %}
 <h1>All Posts</h1>
 
 {% include 'partials/post_cards.html' %}
 <br>
-{% if current_user.is_authenticated %}
-<div align="center">
-    <a href="/create_post">
-        <button type="button" class="btn btn-primary btn-lg">
-            Create a Post
-        </button>
-    </a>
 
-</div>
-{% endif %}
+{% include 'partials/create_post_button.html' %}
 {% endblock %}

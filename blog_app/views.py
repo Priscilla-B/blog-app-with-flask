@@ -130,7 +130,6 @@ def edit_post(id):
 
 
 @views.route("/posts/<username>")
-@login_required
 def posts(username):
     user = User.query.filter_by(username=username).first()
 
@@ -138,5 +137,5 @@ def posts(username):
         flash('No user with that username exists.', category='error')
         return redirect(url_for('views.home'))
 
-    posts = Post.query.filter_by(author=user.id).all()
+    posts = Post.query.filter_by(author=user).all()
     return render_template("posts.html", user=current_user, posts=posts, username=username)

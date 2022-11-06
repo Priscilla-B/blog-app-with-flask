@@ -41,4 +41,10 @@ class CreatePostForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(CreatePostForm, self).__init__(*args, **kwargs)
         self.tags.choices = [obj.name for obj in Tag.query.all()]
-    
+
+
+class ContactForm(FlaskForm):
+    name = StringField(label='Full name')
+    email = EmailField(label='Email', validators=[Email(message='Invalid email address')])
+    subject = StringField(label='Subject')
+    message = TextAreaField(label='Body')

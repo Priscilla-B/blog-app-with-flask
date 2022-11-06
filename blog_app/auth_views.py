@@ -56,5 +56,5 @@ def login():
 def logout():
     logout_user()
     flash('Logged out', category='success')
-    return render_template('index.html')
+    return redirect(url_for('views.home'))
 

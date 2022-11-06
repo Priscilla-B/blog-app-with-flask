@@ -29,11 +29,12 @@ tag_post = db.Table('tag_post',
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(500), nullable=False)
+    summary = db.Column(db.Text())
     body = db.Column(db.Text(), nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     author = db.orm.relationship(User)
     tags=db.relationship('Tag',secondary=tag_post,backref=db.backref('posts_associated',lazy="dynamic"))
-
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
